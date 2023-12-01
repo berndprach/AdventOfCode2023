@@ -1,6 +1,4 @@
 
-import timeit
-
 DIGIT_SPELLINGS = {
     1: "one",
     2: "two",
@@ -54,9 +52,4 @@ def main():
 
 
 if __name__ == "__main__":
-    start = timeit.default_timer()
-
     main()
-
-    stop = timeit.default_timer()
-    print(f"Time: {stop - start:.4g}s")

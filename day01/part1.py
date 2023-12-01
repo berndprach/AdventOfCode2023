@@ -1,4 +1,3 @@
-import timeit
 
 
 def first_digit(string):
@@ -26,14 +25,8 @@ def main():
         lines = f.read().splitlines()
 
     solution = solve(lines)
-
     print(f"{solution = }")
 
 
 if __name__ == "__main__":
-    start = timeit.default_timer()
-
     main()
-
-    stop = timeit.default_timer()
-    print(f"Time: {stop - start:.4g}s")
