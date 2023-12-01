@@ -29,7 +29,6 @@ def last_digit(string) -> int:
             return int(symbol)
 
         remaining_string = string[:len(string)-position_from_end]
-        print(remaining_string)
         for digit, spelling in DIGIT_SPELLINGS.items():
             if remaining_string.endswith(spelling):
                 return digit
