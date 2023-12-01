@@ -24,11 +24,12 @@ def first_digit(string) -> int:
 
 
 def last_digit(string) -> int:
-    for position, symbol in enumerate(reversed(string)):
+    for position_from_end, symbol in enumerate(reversed(string)):
         if symbol.isdigit():
             return int(symbol)
 
-        remaining_string = string[:len(string)-position+1]
+        remaining_string = string[:len(string)-position_from_end]
+        print(remaining_string)
         for digit, spelling in DIGIT_SPELLINGS.items():
             if remaining_string.endswith(spelling):
                 return digit
