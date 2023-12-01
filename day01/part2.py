@@ -12,7 +12,7 @@ DIGIT_SPELLINGS = {
 }
 
 
-def first_digit(string):
+def first_digit(string) -> int:
     for position, symbol in enumerate(string):
         if symbol.isdigit():
             return int(symbol)
@@ -23,7 +23,7 @@ def first_digit(string):
                 return digit
 
 
-def last_digit(string):
+def last_digit(string) -> int:
     for position, symbol in enumerate(reversed(string)):
         if symbol.isdigit():
             return int(symbol)
@@ -34,7 +34,7 @@ def last_digit(string):
                 return digit
 
 
-def solve(lines):
+def solve(lines: list[str]) -> int:
     sum_of_calibrations = 0
     for line in lines:
         calibration_value = 10 * first_digit(line) + last_digit(line)

@@ -1,18 +1,18 @@
 
 
-def first_digit(string):
+def first_digit(string: str) -> int:
     for symbol in string:
         if symbol.isdigit():
             return int(symbol)
 
 
-def last_digit(string):
+def last_digit(string: str) -> int:
     for symbol in reversed(string):
         if symbol.isdigit():
             return int(symbol)
 
 
-def solve(lines):
+def solve(lines: list[str]) -> int:
     sum_of_calibrations = 0
     for line in lines:
         calibration_value = 10 * first_digit(line) + last_digit(line)
