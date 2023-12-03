@@ -28,7 +28,6 @@ def solve(lines: list[str]) -> int:
                 neighbour_number_ids.add(position_to_number_id[neighbor])
 
         if len(neighbour_number_ids) == 2:
-            print(f"{position = }")
             nn1_id, nn2_id = neighbour_number_ids
             value1 = numbers[nn1_id].value
             value2 = numbers[nn2_id].value

@@ -64,7 +64,7 @@ def get_neighbours_of_set(positions: set[Position],
     for position in positions:
         local_neighbours = get_neighbours(position, grid)
         neighbours.update(local_neighbours)
-    return neighbours - set(positions)
+    return neighbours - positions
 
 
 class NumberWithPosition:
@@ -136,11 +136,10 @@ def has_adjacent_symbol(grid: Grid, number: NumberWithPosition) -> bool:
     return False
 
 
-def is_symbol(char: str) -> bool:
-    if char.isdigit():
+def is_symbol(character: str) -> bool:
+    if character.isdigit() or character == ".":
         return False
-    if char == ".":
-        return False
+
     return True
 
 
