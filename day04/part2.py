@@ -14,8 +14,10 @@ def solve(lines: list[str]) -> int:
     return sum(nrof_copies)
 
 
-def number_of_intersections(winning_numbers: list[int], my_numbers: list[int]):
-    intersection = set(winning_numbers).intersection(set(my_numbers))
+def number_of_intersections(winning_numbers: list[int],
+                            card_numbers: list[int],
+                            ) -> int:
+    intersection = set(winning_numbers).intersection(set(card_numbers))
     return len(intersection)
 
 
