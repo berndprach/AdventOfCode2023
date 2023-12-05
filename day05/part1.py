@@ -68,8 +68,13 @@ def parse_map_line(line: str) -> tuple[str, str]:
 
 
 def parse_category_map_lines(line_iterator: Iterator[str]):
-    # "50 98 2"
-    category_map: list[tuple[int, int, int]] = []
+    """
+    seed-to-soil map:
+    50 98 2
+    52 50 48
+
+    """
+    category_map_tuples: list[tuple[int, int, int]] = []
     while True:
         try:
             line = next(line_iterator)
@@ -80,8 +85,8 @@ def parse_category_map_lines(line_iterator: Iterator[str]):
             break
 
         to_idx, from_idx, length = line.split(" ")
-        category_map.append((int(to_idx), int(from_idx), int(length)))
-    return category_map
+        category_map_tuples.append((int(to_idx), int(from_idx), int(length)))
+    return category_map_tuples
 
 
 def solve(lines: list[str]) -> int:
