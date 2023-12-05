@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from typing import Iterator
 
 
@@ -8,20 +9,23 @@ def read_input() -> list[str]:
 
 
 Seeds = list[int]
-CategoryToNext = dict[str, str]
-CategoryMap = list[tuple[int, int, int]]
-CategoryMaps = dict[str, CategoryMap]
 
 
+@dataclass
 class CategoryMap:
-    def __init__(self, from_idx: int, to_idx: int, length: int):
-        self.from_idx = from_idx
-        self.to_idx = to_idx
-        self.length = length
+    category_name: str
+    next_category: str
+    map_tuples: list[tuple[int, int, int]]
+
+    def apply(self, value: int) -> int:
+        for to_idx, from_idx, length in self.map_tuples:
+            if from_idx <= value < from_idx + length:
+                return to_idx + (value - from_idx)
+        return value
 
 
 def parse_lines(lines: list[str]
-                ) -> tuple[Seeds, CategoryToNext, CategoryMaps]:
+                ) -> tuple[Seeds, dict[str, CategoryMap]]:
     """
     seeds: 79 14 55 13
 
@@ -34,8 +38,7 @@ def parse_lines(lines: list[str]
     seed_line = next(line_iterator)
     seeds = [int(n) for n in seed_line.replace("seeds: ", "").split(" ")]
 
-    category_to_next: CategoryToNext = {}
-    category_maps: CategoryMaps = {}
+    category_maps: dict[str, CategoryMap] = {}
 
     while True:
         try:
@@ -45,12 +48,17 @@ def parse_lines(lines: list[str]
 
         if "map:" in line:
             from_category, to_category = parse_map_line(line)
-            category_map = parse_category_map_lines(line_iterator)
+            category_map_tuples = parse_category_map_lines(line_iterator)
 
-            category_to_next[from_category] = to_category
+            category_map = CategoryMap(
+                from_category,
+                to_category,
+                category_map_tuples,
+            )
+
             category_maps[from_category] = category_map
 
-    return seeds, category_to_next, category_maps
+    return seeds, category_maps
 
 
 def parse_map_line(line: str) -> tuple[str, str]:
@@ -76,37 +84,27 @@ def parse_category_map_lines(line_iterator: Iterator[str]):
     return category_map
 
 
-def apply_category_map(category_map: CategoryMap, value: int) -> int:
-    for to_idx, from_idx, length in category_map:
-        if from_idx <= value < from_idx + length:
-            return to_idx + (value - from_idx)
-    return value
-
-
 def solve(lines: list[str]) -> int:
-    seeds, category_to_next, category_maps = parse_lines(lines)
+    seeds, category_maps = parse_lines(lines)
 
-    seed_to_soil = {}
+    seed_to_location = {}
     for seed in seeds:
-        soil = get_location_from_seed(seed, category_to_next, category_maps)
-        seed_to_soil[seed] = soil
+        location = get_location_from_seed(seed, category_maps)
+        seed_to_location[seed] = location
 
-    # closest_seed = min(seed_to_soil, key=seed_to_soil.get)
-    closest_location = min(seed_to_soil.values())
+    closest_location = min(seed_to_location.values())
     return closest_location
 
 
 def get_location_from_seed(seed_number: int,
-                           category_to_next: CategoryToNext,
-                           category_maps: CategoryMaps,
+                           category_maps: dict[str, CategoryMap],
                            ) -> int:
     category = "seed"
     value = seed_number
     while category != "location":
         category_map = category_maps[category]
-        value = apply_category_map(category_map, value)
-        category = category_to_next[category]
-        # print(f"{category = }, {value = }")
+        value = category_map.apply(value)
+        category = category_map.next_category
     return value
 
 

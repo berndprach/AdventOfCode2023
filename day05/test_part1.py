@@ -15,16 +15,18 @@ class TestPart1(unittest.TestCase):
         print("\n".join(lines))
         print("="*40)
 
-        seeds, category_to_next, category_maps = parse_lines(lines)
+        seeds, category_maps = parse_lines(lines)
         self.assertEqual(seeds, [79, 14, 55, 13])
-        self.assertEqual(category_to_next, {
-            "seed": "soil",
-            "soil": "fertilizer",
-        })
-        self.assertEqual(category_maps, {
-            "seed": [(50, 98, 2), (52, 50, 48)],
-            "soil": [(0, 15, 37)],
-        })
+
+        seed_map = category_maps["seed"]
+        self.assertEqual(seed_map.category_name, "seed")
+        self.assertEqual(seed_map.next_category, "soil")
+        self.assertEqual(seed_map.map_tuples, [(50, 98, 2), (52, 50, 48)])
+
+        soil_map = category_maps["soil"]
+        self.assertEqual(soil_map.category_name, "soil")
+        self.assertEqual(soil_map.next_category, "fertilizer")
+        self.assertEqual(soil_map.map_tuples, [(0, 15, 37)])
 
     def test_solve(self):
         with open("test_input.txt") as f:
