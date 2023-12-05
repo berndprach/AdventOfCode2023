@@ -46,14 +46,14 @@ def parse_lines(lines: list[str]
         except StopIteration:
             break
 
-        if "map:" in line:
+        if "map" in line:
             from_category, to_category = parse_map_line(line)
-            category_map_tuples = parse_category_map_lines(line_iterator)
+            map_tuples = parse_map_tuples(line_iterator)
 
             category_map = CategoryMap(
                 from_category,
                 to_category,
-                category_map_tuples,
+                map_tuples,
             )
 
             category_maps[from_category] = category_map
@@ -67,7 +67,7 @@ def parse_map_line(line: str) -> tuple[str, str]:
     return from_category, to_category
 
 
-def parse_category_map_lines(line_iterator: Iterator[str]):
+def parse_map_tuples(line_iterator: Iterator[str]):
     """
     seed-to-soil map:
     50 98 2
