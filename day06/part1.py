@@ -24,7 +24,7 @@ def solve(lines: list[str]) -> int:
 
 def get_number_of_possibilities(race_time: int, race_record: int) -> int:
     number_of_possible_positions = 0
-    for charging_time in range(1, race_record):
+    for charging_time in range(1, race_time):
         moving_time = race_time - charging_time
         distance = moving_time * charging_time
         if distance > race_record:
