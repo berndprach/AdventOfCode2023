@@ -11,9 +11,9 @@ def beats_record(charging_time: int,
 
 
 def solve(lines: list[str]) -> int:
-    times, furthest_distances = parse_lines(lines)
-    race_time = int("".join(str(n) for n in times))
-    race_record = int("".join(str(n) for n in furthest_distances))
+    race_times, race_records = parse_lines(lines)
+    race_time = int("".join(str(n) for n in race_times))
+    race_record = int("".join(str(n) for n in race_records))
 
     best_charging_time = race_time // 2
     if not beats_record(best_charging_time, race_time, race_record):
