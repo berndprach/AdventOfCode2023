@@ -1,7 +1,7 @@
 
 import unittest
 
-from part1 import solve, get_hand_score, get_sorted_counts
+from part1 import solve, get_hand_strength, get_sorted_counts
 
 GOAL_SOLUTION = 6440
 
@@ -13,8 +13,8 @@ class TestPart1(unittest.TestCase):
         self.assertEqual(get_sorted_counts("23444"), [3, 3, 3, 1, 1])
 
     def test_get_hand_order(self):
-        hand_order = get_hand_score("AAAKK")
-        self.assertEqual(hand_order, [3, 3, 3, 2, 2, 12, 12, 12, 11, 11])
+        hand_order = get_hand_strength("AAKAK")
+        self.assertEqual(hand_order, [3, 3, 3, 2, 2, 12, 12, 11, 12, 11])
 
     def test_solve(self):
         with open("test_input.txt") as f:

@@ -1,5 +1,4 @@
 
-
 CARD_ORDER = "AKQJT98765432"
 CARD_INDEX = {card: index for index, card in enumerate(reversed(CARD_ORDER))}
 
@@ -12,7 +11,7 @@ def get_sorted_counts(hand: str) -> list[int]:
     return sorted(counts, reverse=True)
 
 
-def get_hand_score(hand: str) -> list[int]:
+def get_hand_strength(hand: str) -> list[int]:
     sorted_counts = get_sorted_counts(hand)
     card_indices = [CARD_INDEX[card] for card in hand]
     return sorted_counts + card_indices
@@ -36,11 +35,12 @@ def parse_input(lines: list[str]) -> list[tuple[str, int]]:
 
 def solve(lines: list[str]) -> int:
     hands_with_bids = parse_input(lines)
-    hands_with_bids = sorted(hands_with_bids,
-                             key=lambda x: get_hand_score(x[0]))
+    sorted_hands_with_bids = sorted(
+        hands_with_bids, key=lambda x: get_hand_strength(x[0])
+    )
 
     solution = 0
-    for rank_, (hand, bid) in enumerate(hands_with_bids):
+    for rank_, (hand, bid) in enumerate(sorted_hands_with_bids):
         rank = rank_ + 1
         solution += rank * bid
     return solution
