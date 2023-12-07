@@ -1,8 +1,7 @@
-
 from part1 import read_input, CARD_INDEX, parse_input, get_sorted_counts
 
 
-def get_hand_order_with_joker(hand: str) -> list[int]:
+def get_hand_strength_with_joker(hand: str) -> list[int]:
     if hand == "JJJJJ":
         return [5, 5, 5, 5, 5, -1, -1, -1, -1, -1]
 
@@ -19,11 +18,12 @@ def get_hand_order_with_joker(hand: str) -> list[int]:
 
 def solve(lines: list[str]) -> int:
     hands_with_bids = parse_input(lines)
-    hands_with_bids = sorted(hands_with_bids,
-                             key=lambda x: get_hand_order_with_joker(x[0]))
+    sorted_hands_with_bids = sorted(
+        hands_with_bids, key=lambda x: get_hand_strength_with_joker(x[0])
+    )
 
     solution = 0
-    for rank_, (hand, bid) in enumerate(hands_with_bids):
+    for rank_, (hand, bid) in enumerate(sorted_hands_with_bids):
         rank = rank_ + 1
         solution += rank * bid
     return solution
