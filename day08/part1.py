@@ -8,10 +8,9 @@ def read_input() -> list[str]:
 
 
 Node = str
-Inst = str
 
 
-def parse_lines(lines: list[str]) -> tuple[str, dict[tuple[Node, Inst], Node]]:
+def parse_lines(lines: list[str]) -> tuple[str, dict[tuple[Node, str], Node]]:
     instructions = lines[0]
 
     next_node = {}
