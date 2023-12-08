@@ -1,6 +1,5 @@
 import itertools
 import math
-import time
 
 from part1 import read_input, parse_lines, Node
 
