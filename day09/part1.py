@@ -1,5 +1,3 @@
-import numpy as np
-
 
 def read_input() -> list[str]:
     with open("input.txt") as f:
@@ -12,11 +10,11 @@ def parse_line(line: str) -> list[int]:
     return [int(v) for v in line.split(" ")]
 
 
-def predict_next_number(numbers: np.array) -> int:
+def predict_next_number(numbers: list[int]) -> int:
     if all(n == 0 for n in numbers):
         return 0
 
-    differences = numbers[1:] - numbers[:-1]
+    differences = [numbers[i+1] - numbers[i] for i in range(len(numbers)-1)]
     new_difference = predict_next_number(differences)
     return numbers[-1] + new_difference
 
@@ -25,7 +23,7 @@ def solve(lines: list[str]) -> int:
     solutions = 0
     for line in lines:
         numbers = parse_line(line)
-        solutions += predict_next_number(np.array(numbers))
+        solutions += predict_next_number(numbers)
     return solutions
 
 
