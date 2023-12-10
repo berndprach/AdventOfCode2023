@@ -121,8 +121,8 @@ def solve(lines: list[str]) -> int:
     starting_position, pipe_at_position = parse_lines(lines)
     place_pipe_at_starting_position(starting_position, pipe_at_position)
 
-    second_positions = pipe_at_position[starting_position].next_positions
-    current_position_1, current_position_2 = second_positions
+    starting_pipe = pipe_at_position[starting_position]
+    current_position_1, current_position_2 = starting_pipe.next_positions
 
     previous_position_1 = starting_position
     previous_position_2 = starting_position
@@ -142,7 +142,9 @@ def solve(lines: list[str]) -> int:
     return solution
 
 
-def update_positions(previous: Position, current: Position, pipe_at_position: Grid):
+def update_positions(previous: Position,
+                     current: Position,
+                     pipe_at_position: Grid):
     current_pipe = pipe_at_position[current]
     next_position = current_pipe.next_position(previous)
     return current, next_position
