@@ -19,6 +19,9 @@ class Position:
     def __neg__(self):
         return Position(-self.x, -self.y)
 
+    def __sub__(self, other):
+        return self + (-other)
+
     def __eq__(self, other):
         return self.x == other.x and self.y == other.y
 
@@ -36,60 +39,25 @@ class Directions(Enum):
 class Pipe:
     def __init__(self,
                  position: Position,
-                 directions: Optional[tuple[Directions, Directions]]):
+                 directions: tuple[Directions, Directions]):
         self.position = position
         self.directions = directions
 
-        self.next_position = (
+        self.next_positions = (
             self.position + self.directions[0].value,
             self.position + self.directions[1].value,
-        ) if self.directions is not None else None
+        )
 
     def next_position(self, previous_position: Position) -> Position:
-        if self.directions is None:
-            raise ValueError("Pipe has no directions")
-        if previous_position == self.position + self.directions[0].value:
-            return self.position + self.directions[1].value
-        elif previous_position == self.position + self.directions[1].value:
-            return self.position + self.directions[0].value
+        if previous_position == self.next_positions[0]:
+            return self.next_positions[1]
+        elif previous_position == self.next_positions[1]:
+            return self.next_positions[0]
         else:
             raise ValueError("Pipe does not connect to previous position")
 
 
-Grid = dict[Position, Pipe]
-
-
-SYMBOL_TO_DIRECTION = {
-    "|": {Directions.UP, Directions.DOWN},
-    "-": {Directions.LEFT, Directions.RIGHT},
-    "L": {Directions.UP, Directions.RIGHT},
-    "J": {Directions.UP, Directions.LEFT},
-    "7": {Directions.DOWN, Directions.LEFT},
-    "F": {Directions.DOWN, Directions.RIGHT},
-}
-
-
-def parse_lines(lines: list[str]) -> tuple[Position, Grid]:
-    grid = {}
-    starting_position = None
-
-    for y, line in enumerate(lines):
-        for x, char in enumerate(line):
-            if char == ".":
-                pipe = Pipe(Position(x, y), None)
-            elif char == "S":
-                pipe = Pipe(Position(x, y), None)
-                starting_position = Position(x, y)
-            elif char in SYMBOL_TO_DIRECTION:
-                pipe = Pipe(Position(x, y), tuple(SYMBOL_TO_DIRECTION[char]))
-            else:
-                raise ValueError(f"Unknown symbol {char}")
-            grid[Position(x, y)] = pipe
-
-    if starting_position is None:
-        raise ValueError("No starting position found")
-
-    return starting_position, grid
+Grid = dict[Position, Optional[Pipe]]
 
 
 def valid_neighbours(position: Position, grid: Grid) -> list[Position]:
@@ -100,54 +68,87 @@ def valid_neighbours(position: Position, grid: Grid) -> list[Position]:
     ]
 
 
-def label_starting_position(starting_position: Position, grid: Grid) -> None:
+SYMBOL_TO_DIRECTIONS = {
+    "|": {Directions.UP, Directions.DOWN},
+    "-": {Directions.LEFT, Directions.RIGHT},
+    "L": {Directions.UP, Directions.RIGHT},
+    "J": {Directions.UP, Directions.LEFT},
+    "7": {Directions.DOWN, Directions.LEFT},
+    "F": {Directions.DOWN, Directions.RIGHT},
+}
+
+
+def parse_lines(lines: list[str]) -> tuple[Position, Grid]:
+    pipe_at_position = {}
+    starting_position = None
+
+    for y, line in enumerate(lines):
+        for x, character in enumerate(line):
+            if character == ".":
+                pipe = None
+            elif character == "S":
+                pipe = None
+                starting_position = Position(x, y)
+            elif character in SYMBOL_TO_DIRECTIONS:
+                pipe_directions = SYMBOL_TO_DIRECTIONS[character]
+                pipe = Pipe(Position(x, y), tuple(pipe_directions))
+            else:
+                raise ValueError(f"Unknown symbol {character}")
+            pipe_at_position[Position(x, y)] = pipe
+
+    if starting_position is None:
+        raise ValueError("No starting position found")
+
+    return starting_position, pipe_at_position
+
+
+def place_pipe_at_starting_position(starting_position: Position,
+                                    pipe_at_position: Grid):
     pipe_directions = set()
-    for direction in Directions:
-        neighbour_position = starting_position + direction.value
-        if neighbour_position not in grid:
+    for neighbour_position in valid_neighbours(starting_position,
+                                               pipe_at_position):
+        neighbour_pipe = pipe_at_position[neighbour_position]
+        if neighbour_pipe is None:
             continue
-        neighbour_pipe = grid[neighbour_position]
-        if neighbour_pipe.directions is None:
-            continue
-        opposite_direction = Directions(-direction.value)
-        if opposite_direction in neighbour_pipe.directions:
-            pipe_directions.add(direction)
+
+        if starting_position in neighbour_pipe.next_positions:
+            pipe_direction = Directions(neighbour_position - starting_position)
+            pipe_directions.add(pipe_direction)
 
     assert len(pipe_directions) == 2
-    grid[starting_position].directions = tuple(pipe_directions)
+    d1, d2 = pipe_directions
+    pipe_at_position[starting_position] = Pipe(starting_position, (d1, d2))
 
 
 def solve(lines: list[str]) -> int:
-    starting_position, grid = parse_lines(lines)
-    print(f"{starting_position = }")
+    starting_position, pipe_at_position = parse_lines(lines)
+    place_pipe_at_starting_position(starting_position, pipe_at_position)
 
-    label_starting_position(starting_position, grid)
-    starting_directions = grid[starting_position].directions
-    current_position_1 = starting_position + starting_directions[0].value
-    current_position_2 = starting_position + starting_directions[1].value
+    second_positions = pipe_at_position[starting_position].next_positions
+    current_position_1, current_position_2 = second_positions
 
     previous_position_1 = starting_position
     previous_position_2 = starting_position
-    print(f"{current_position_1 = }")
-    print(f"{current_position_2 = }")
     solution = 1
 
     while current_position_1 != current_position_2:
-        pipe1 = grid[current_position_1]
-        next_position_1 = pipe1.next_position(previous_position_1)
-        previous_position_1 = current_position_1
-        current_position_1 = next_position_1
-        print(f"{current_position_1 = }")
+        previous_position_1, current_position_1 = update_positions(
+            previous_position_1, current_position_1, pipe_at_position
+        )
 
-        pipe2 = grid[current_position_2]
-        next_position_2 = pipe2.next_position(previous_position_2)
-        previous_position_2 = current_position_2
-        current_position_2 = next_position_2
-        print(f"{current_position_2 = }")
+        previous_position_2, current_position_2 = update_positions(
+            previous_position_2, current_position_2, pipe_at_position
+        )
 
         solution += 1
 
     return solution
+
+
+def update_positions(previous: Position, current: Position, pipe_at_position: Grid):
+    current_pipe = pipe_at_position[current]
+    next_position = current_pipe.next_position(previous)
+    return current, next_position
 
 
 def main():
