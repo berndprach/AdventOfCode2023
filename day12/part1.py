@@ -30,30 +30,29 @@ def get_number_of_solutions(states: list[State], counts: list[int]) -> int:
             return 1
 
     number_of_solutions = 0
+    # Try staring the first cound at position 0:
     first_count = counts[0]
-    for first_start in range(len(is_damaged) - first_count + 1):
-        if not is_valid(first_start, first_count, is_damaged):
-            if is_damaged[first_start] == State.DAMAGED:
-                break
-            continue
+    if can_place(first_count, index=0, states=states):
+        new_states, new_counts = states[first_count + 1:], counts[1:]
+        number_of_solutions += get_number_of_solutions(new_states, new_counts)
 
-        new_is_damaged_start = first_start + first_count + 1
-        new_is_damaged = is_damaged[new_is_damaged_start:]
-        number_of_solutions += get_number_of_solutions(new_is_damaged,
-                                                       counts[1:])
-        if is_damaged[first_start] == State.DAMAGED:
-            break
+    # Try leaving the first position empty:
+    if len(states) != 0 and states[0] in {State.OPERATIONAL, State.UNKNOWN}:
+        new_states = states[1:]
+        number_of_solutions += get_number_of_solutions(new_states, counts)
 
     return number_of_solutions
 
 
-def is_valid(start: int, count: int, line: list[State]) -> bool:
-    # Check if exactly count damaged ones in [start, start + count) is valid:
-    for i in range(start, start + count):
-        if line[i] == State.OPERATIONAL:
+def can_place(count: int, index: int, states: list[State]) -> bool:
+    if index + count > len(states):
+        return False
+
+    for i in range(index, index + count):
+        if states[i] == State.OPERATIONAL:
             return False
 
-    if start+count < len(line) and line[start + count] == State.DAMAGED:
+    if index + count < len(states) and states[index + count] == State.DAMAGED:
         return False
 
     return True
@@ -62,7 +61,6 @@ def is_valid(start: int, count: int, line: list[State]) -> bool:
 def solve(lines: list[str]) -> int:
     solution = 0
     for line in lines:
-        # print(f"Evaluating {line = }.")
         is_damaged, counts = parse_line(line)
         solution += get_number_of_solutions(is_damaged, counts)
     return solution
