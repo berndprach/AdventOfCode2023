@@ -1,4 +1,4 @@
-from enum import Enum, auto
+from enum import Enu
 
 
 def read_input() -> list[str]:
