@@ -60,8 +60,8 @@ def can_place(count: int, index: int, states: list[State]) -> bool:
 def solve(lines: list[str]) -> int:
     solution = 0
     for line in lines:
-        is_damaged, counts = parse_line(line)
-        solution += get_number_of_solutions(is_damaged, counts)
+        states, counts = parse_line(line)
+        solution += get_number_of_solutions(states, counts)
     return solution
 
 
