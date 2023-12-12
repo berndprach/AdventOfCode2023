@@ -14,13 +14,13 @@ def get_number_of_solutions(states: tuple[State], counts: tuple[int]) -> int:
             return 1
 
     number_of_solutions = 0
-    # Try staring the first cound at position 0:
+    # Consider first position as damaged:
     first_count = counts[0]
     if can_place(first_count, index=0, states=list(states)):
         new_states, new_counts = states[first_count + 1:], counts[1:]
         number_of_solutions += get_number_of_solutions(new_states, new_counts)
 
-    # Try leaving the first position empty:
+    # Consider first position as operational:
     if len(states) != 0 and states[0] in {State.OPERATIONAL, State.UNKNOWN}:
         new_states = states[1:]
         number_of_solutions += get_number_of_solutions(new_states, counts)
