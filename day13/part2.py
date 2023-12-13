@@ -13,18 +13,18 @@ def find_smugded_horizontal_reflection(pattern: Pattern) -> Optional[int]:
 
 
 def is_smugded_horizontal_reflection(reflection_y, pattern: Pattern) -> bool:
-    nrof_differences = 0
+    number_of_differences = 0
     for x, y in pattern:
         other_y = 2 * reflection_y - y + 1
         if (x, other_y) not in pattern:
             continue
         if pattern[(x, y)] != pattern[(x, other_y)]:
-            nrof_differences += 1
+            number_of_differences += 1
 
-        if nrof_differences > 2:
+        if number_of_differences > 2:
             return False
 
-    return nrof_differences == 2
+    return number_of_differences == 2
 
 
 def find_smudged_vertical_reflection(pattern: Pattern) -> Optional[int]:
