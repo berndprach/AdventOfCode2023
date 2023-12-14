@@ -19,9 +19,7 @@ def rotate_clockwise(platform: Platform) -> Platform:
 def apply_cycle(platform: Platform) -> Platform:
     for _ in range(4):
         platform = tilt_north(platform)
-        # print(platform)
         platform = rotate_clockwise(platform)
-        # print(platform)
     return platform
 
 
@@ -31,9 +29,6 @@ def solve(lines: list[str]) -> int:
 
     iteration = 0
     while iteration < NUMBER_OF_CYCLES:
-        if is_power_of_two(iteration):
-            print(f"Iteration {iteration}.")
-
         platform = apply_cycle(platform)
         platform_key = frozenset(platform.items())
 
@@ -46,17 +41,14 @@ def solve(lines: list[str]) -> int:
             iterations_left = NUMBER_OF_CYCLES - iteration
             new_iteration_left = iterations_left % iteration_difference
             iteration = NUMBER_OF_CYCLES - new_iteration_left
-            print(f"Set iteration to {iteration}")
+            print(f"Set iteration to {iteration:,}.\n")
+            previous_appearances = {}
 
         previous_appearances[platform_key] = iteration
 
         iteration += 1
 
     return get_total_load(platform)
-
-
-def is_power_of_two(number: int) -> bool:
-    return number & (number - 1) == 0
 
 
 def main():
