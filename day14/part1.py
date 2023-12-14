@@ -7,21 +7,21 @@ def read_input() -> list[str]:
     return lines
 
 
-class Object(Enum):
+class Entity(Enum):
     EMPTY = "."
     ROUND_ROCK = "O"
     SQUARE_ROCK = "#"
 
 
 Position = tuple[int, int]
-Platform = dict[Position, Object]
+Platform = dict[Position, Entity]
 
 
 def parse_lines(lines: list[str]) -> Platform:
     platform = {}
     for y, line in enumerate(lines):
         for x, character in enumerate(line):
-            object_at_position = Object(character)
+            object_at_position = Entity(character)
             platform[(x, y)] = object_at_position
     return platform
 
@@ -39,12 +39,12 @@ def tilt_column_north(x: int, platform: Platform) -> None:
     for current_y in range(max_y + 1):
         object_at_position = platform[(x, current_y)]
 
-        if object_at_position == Object.SQUARE_ROCK:
+        if object_at_position == Entity.SQUARE_ROCK:
             next_empty_y = current_y + 1
             continue
 
-        if object_at_position == Object.ROUND_ROCK:
-            platform[(x, current_y)] = Object.EMPTY  # First remove
+        if object_at_position == Entity.ROUND_ROCK:
+            platform[(x, current_y)] = Entity.EMPTY  # First remove
             platform[(x, next_empty_y)] = object_at_position  # Then place
             next_empty_y += 1
             continue
@@ -54,7 +54,7 @@ def get_total_load(platform: Platform) -> int:
     total_load = 0
     max_y = max(y for x, y in platform)
     for position, object_at_position in platform.items():
-        if object_at_position == Object.ROUND_ROCK:
+        if object_at_position == Entity.ROUND_ROCK:
             rock_load = max_y - position[1] + 1
             total_load += rock_load
     return total_load
