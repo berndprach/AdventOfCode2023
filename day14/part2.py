@@ -1,3 +1,5 @@
+import time
+
 from part1 import read_input, Platform, tilt_north, get_total_load, parse_lines
 
 NUMBER_OF_CYCLES = 1_000_000_000
@@ -45,16 +47,20 @@ def solve(lines: list[str]) -> int:
             previous_appearances = {}
 
         previous_appearances[platform_key] = iteration
-
         iteration += 1
 
     return get_total_load(platform)
 
 
 def main():
+    start = time.time()
+
     lines = read_input()
     solution = solve(lines)
     print(f"{solution = }")
+
+    end = time.time()
+    print(f"Execution took {end - start:.2f} seconds.")
 
 
 if __name__ == "__main__":
