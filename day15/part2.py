@@ -1,20 +1,20 @@
 
 from collections import OrderedDict
 
-from part1 import read_input, hash_string
+from part1 import read_input, find_hash
 
 
 BoxContends = list[OrderedDict]
 
 
 def remove_lense(box_contends: BoxContends, label: str) -> None:
-    box_number = hash_string(label)
+    box_number = find_hash(label)
     box_contend = box_contends[box_number]
     box_contend.pop(label, None)
 
 
 def add_lense(box_contends: BoxContends, label: str, focal_length: int):
-    box_number = hash_string(label)
+    box_number = find_hash(label)
     box_contend = box_contends[box_number]
     box_contend[label] = focal_length
 

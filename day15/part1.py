@@ -5,9 +5,9 @@ def read_input() -> list[str]:
     return lines
 
 
-def hash_string(step: str) -> int:
+def find_hash(string: str) -> int:
     current_value = 0
-    for character in step:
+    for character in string:
         ascii_value = ord(character)
         current_value += ascii_value
         current_value *= 17
@@ -18,7 +18,7 @@ def hash_string(step: str) -> int:
 def solve(lines: list[str]) -> int:
     line = lines[0]
     parts = line.split(",")
-    solution = sum(hash_string(part) for part in parts)
+    solution = sum(find_hash(part) for part in parts)
     return solution
 
 
