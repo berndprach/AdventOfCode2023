@@ -7,6 +7,18 @@ from part1 import read_input, hash_string
 BoxContends = list[OrderedDict]
 
 
+def remove_lense(box_contends: BoxContends, label: str) -> None:
+    box_number = hash_string(label)
+    box_contend = box_contends[box_number]
+    box_contend.pop(label, None)
+
+
+def add_lense(box_contends: BoxContends, label: str, focal_length: int):
+    box_number = hash_string(label)
+    box_contend = box_contends[box_number]
+    box_contend[label] = focal_length
+
+
 def solve(lines: list[str]) -> int:
     box_contends = [OrderedDict() for _ in range(256)]
     steps = lines[0].split(",")
@@ -23,18 +35,6 @@ def solve(lines: list[str]) -> int:
     for i, box_contend in enumerate(box_contends):
         solution += (i+1) * get_focusing_power(box_contend)
     return solution
-
-
-def remove_lense(box_contends: BoxContends, label: str) -> None:
-    box_number = hash_string(label)
-    box_contend = box_contends[box_number]
-    box_contend.pop(label, None)
-
-
-def add_lense(box_contends: BoxContends, label: str, focal_length: int):
-    box_number = hash_string(label)
-    box_contend = box_contends[box_number]
-    box_contend[label] = focal_length
 
 
 def get_focusing_power(box_contend: OrderedDict) -> int:

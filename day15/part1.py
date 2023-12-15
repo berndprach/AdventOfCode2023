@@ -5,13 +5,6 @@ def read_input() -> list[str]:
     return lines
 
 
-def solve(lines: list[str]) -> int:
-    line = lines[0]
-    parts = line.split(",")
-    solution = sum(hash_string(part) for part in parts)
-    return solution
-
-
 def hash_string(step: str) -> int:
     current_value = 0
     for character in step:
@@ -20,6 +13,13 @@ def hash_string(step: str) -> int:
         current_value *= 17
         current_value %= 256
     return current_value
+
+
+def solve(lines: list[str]) -> int:
+    line = lines[0]
+    parts = line.split(",")
+    solution = sum(hash_string(part) for part in parts)
+    return solution
 
 
 def main():
