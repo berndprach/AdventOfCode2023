@@ -3,7 +3,7 @@ import unittest
 
 from part2 import solve
 
-GOAL_SOLUTION = 281
+GOAL_SOLUTION = 145
 
 
 class TestPart2(unittest.TestCase):
