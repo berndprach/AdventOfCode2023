@@ -39,7 +39,7 @@ def get_new_directions(current_direction: Direction,
         new_direction = new_direction_dict[current_direction]
         return [new_direction]
 
-    if symbol == "\\":
+    if symbol == "\\":  # \
         new_direction_dict = {
             Direction.North: Direction.West,
             Direction.East: Direction.South,
@@ -62,10 +62,10 @@ def get_new_directions(current_direction: Direction,
             return [current_direction]
 
 
-def find_number_of_enegized(grid: dict[Position, str],
-                            starting_position: Position,
-                            starting_direction: Direction,
-                            ) -> int:
+def find_number_of_enegized_positions(grid: dict[Position, str],
+                                      starting_position: Position,
+                                      starting_direction: Direction,
+                                      ) -> int:
     is_energized = {position: False for position in grid}
 
     active_light_beams = [(starting_position, starting_direction)]
@@ -106,7 +106,7 @@ def solve(lines: list[str]) -> int:
     grid = parse_input(lines)
     initial_position = Position(0, 0)
     initial_direction = Direction.East
-    return find_number_of_enegized(grid, initial_position, initial_direction)
+    return find_number_of_enegized_positions(grid, initial_position, initial_direction)
 
 
 def main():
