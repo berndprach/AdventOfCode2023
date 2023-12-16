@@ -3,7 +3,6 @@ from part1 import (
     read_input,
     find_number_of_enegized_positions,
     parse_input,
-    Position,
     Direction,
 )
 
