@@ -7,9 +7,6 @@ def read_input() -> list[str]:
     return lines
 
 
-Position = tuple[int, int]
-
-
 def parse_input(lines: list[str]) -> list[tuple[str, int]]:
     # R 6 (#70c710)
     instructions = []
@@ -19,6 +16,9 @@ def parse_input(lines: list[str]) -> list[tuple[str, int]]:
             (direction, int(distance_str))
         )
     return instructions
+
+
+Position = tuple[int, int]
 
 
 DIRECTION: dict[str, Position] = {
