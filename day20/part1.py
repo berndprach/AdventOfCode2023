@@ -56,7 +56,7 @@ class FlipFlopModule(PulseModule):
         return self.send_pulse(is_high=self.state)
 
 
-class ConjuctionModule(PulseModule):
+class ConjunctionModule(PulseModule):
     def __init__(self, name: str):
         super().__init__(name)
         self.last_incoming_was_high = {}
@@ -97,11 +97,11 @@ def parse_input(lines: list[str]) -> dict[str, PulseModule]:
         if name_str.startswith("%"):
             name = name_str[1:]
             pulse_module = FlipFlopModule(name)
-        elif name_str == "broadcaster":
-            pulse_module = BroadcastModule(name_str)
         elif name_str.startswith("&"):
             name = name_str[1:]
-            pulse_module = ConjuctionModule(name)
+            pulse_module = ConjunctionModule(name)
+        elif name_str == "broadcaster":
+            pulse_module = BroadcastModule(name_str)
         else:
             raise ValueError(f"Unknown pulse module: {line}")
 
@@ -112,7 +112,7 @@ def parse_input(lines: list[str]) -> dict[str, PulseModule]:
     for pulse_module in pulse_modules.values():
         for receiver_name in pulse_module.receivers:
             reveriver_module = pulse_modules.get(receiver_name, None)
-            if reveriver_module is not None:
+            if reveriver_module is not None:  # Excluding e.g. "output" module
                 reveriver_module.add_sender(pulse_module.name)
 
     button_module = ButtonModule("button")
@@ -125,11 +125,7 @@ def solve(lines: list[str]) -> int:
     pulse_modules = parse_input(lines)
 
     for _ in range(1_000):
-        print("\nPressing the button!")
         process_button_press(pulse_modules)
-
-    print(f"{PulseModule.high_pulses_sent = }")
-    print(f"{PulseModule.low_pulses_sent = }")
 
     return PulseModule.high_pulses_sent * PulseModule.low_pulses_sent
 
@@ -138,11 +134,10 @@ def process_button_press(pulse_modules: dict[str, PulseModule]) -> None:
     pulse_queue = pulse_modules["button"].send_pulse(is_high=False)
     while len(pulse_queue) > 0:
         pulse = pulse_queue.pop(0)
-        print(pulse)
-        pulse_module = pulse_modules.get(pulse.receiver, None)
-        if pulse_module is None:  # E.g. "output" module
+        reciever_module = pulse_modules.get(pulse.receiver, None)
+        if reciever_module is None:  # E.g. "output" module
             continue
-        new_pulses = pulse_module.process_pulse(pulse)
+        new_pulses = reciever_module.process_pulse(pulse)
         pulse_queue.extend(new_pulses)
 
 

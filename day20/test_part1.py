@@ -1,7 +1,7 @@
 
 import unittest
 
-from part1 import solve, parse_input, read_input
+from part1 import solve
 
 GOAL_SOLUTION = 11687500
 
