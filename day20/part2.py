@@ -60,7 +60,6 @@ def find_incoming_highs(pulse_modules: dict[str, PulseModule],
 
 def solve(lines: list[str]) -> int:
     pulse_modules = parse_input(lines)
-
     last_incoming_was_high = find_incoming_highs(pulse_modules, "rg")
     periods = [min(times) for times in last_incoming_was_high.values()]
     return lowest_common_multiple(periods)
