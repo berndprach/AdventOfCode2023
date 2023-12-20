@@ -111,9 +111,9 @@ def parse_input(lines: list[str]) -> dict[str, PulseModule]:
 
     for pulse_module in pulse_modules.values():
         for receiver_name in pulse_module.receivers:
-            reveriver_module = pulse_modules.get(receiver_name, None)
-            if reveriver_module is not None:  # Excluding e.g. "output" module
-                reveriver_module.add_sender(pulse_module.name)
+            reciever_module = pulse_modules.get(receiver_name, None)
+            if reciever_module is not None:  # Excluding e.g. "output" module
+                reciever_module.add_sender(pulse_module.name)
 
     button_module = ButtonModule("button")
     button_module.add_receiver("broadcaster")
