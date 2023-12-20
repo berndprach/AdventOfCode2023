@@ -56,9 +56,9 @@ def parse_rule(rule_string: str) -> Rule:
     condition_string, next_workflow_name = rule_string.split(":")
     for comparison_symbol in COMPARISONS:
         if comparison_symbol in condition_string:
-            letter, value_string = condition_string.split(comparison_symbol)
+            attribute, value_string = condition_string.split(comparison_symbol)
             value = int(value_string)
-            condition = (letter, comparison_symbol, value)
+            condition = (attribute, comparison_symbol, value)
             return condition, next_workflow_name
 
 
