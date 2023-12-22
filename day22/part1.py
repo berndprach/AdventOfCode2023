@@ -90,8 +90,8 @@ def solve(lines: list[str]) -> int:
     return count
 
 
-def safe_to_disintegrate(brick: Brick, rests_on, supports) -> bool:
-    for supported_brick in supports[brick]:
+def safe_to_disintegrate(current_brick: Brick, rests_on, supports) -> bool:
+    for supported_brick in supports[current_brick]:
         if len(rests_on[supported_brick]) == 1:
             return False
     return True
