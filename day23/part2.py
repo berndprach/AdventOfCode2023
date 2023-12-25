@@ -1,11 +1,10 @@
 from time import time
 from typing import Optional
 
-from part1 import read_input, Position, DIRECTIONS, parse_input
+from part1 import read_input, Position, DIRECTIONS, parse_input, Graph
 
 
-def get_neighbour_graph(characters: dict[Position, str]
-                        ) -> dict[Position, list[Position]]:
+def get_neighbour_graph(characters: dict[Position, str]) -> Graph:
     next_positions: dict[Position, list[Position]] = {}
     for position, character in characters.items():
         if character == "#":
@@ -20,7 +19,7 @@ def get_neighbour_graph(characters: dict[Position, str]
     return next_positions
 
 
-Graph = dict[Position, list[Position]]
+# Graph = dict[Position, list[Position]]
 GraphWithDistance = dict[Position, list[tuple[Position, int]]]
 
 
@@ -43,7 +42,7 @@ def simplify_graph(next_positions: Graph) -> GraphWithDistance:
 
 def get_next_intersection(previous: Position,
                           current: Position,
-                          next_positions: dict[Position, list[Position]]
+                          next_positions: Graph,
                           ) -> tuple[Position, int]:
     # Gets the next intersection or the next dead end.
     distance = 1
