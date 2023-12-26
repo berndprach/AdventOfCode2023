@@ -15,11 +15,11 @@ class Ray:
     direction: tuple[int, int]
 
 
-def intersect_rays(line1: Ray, line2: Ray) -> Optional[tuple[float, float]]:
-    x1, y1 = line1.point
-    dx1, dy1 = line1.direction
-    x2, y2 = line2.point
-    dx2, dy2 = line2.direction
+def intersect_rays(ray1: Ray, ray2: Ray) -> Optional[tuple[float, float]]:
+    x1, y1 = ray1.point
+    dx1, dy1 = ray1.direction
+    x2, y2 = ray2.point
+    dx2, dy2 = ray2.direction
 
     nominator_t = (x2 - x1) * dy2 - (y2 - y1) * dx2
     nominator_u = (x2 - x1) * dy1 - (y2 - y1) * dx1
