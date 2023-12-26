@@ -70,34 +70,28 @@ def find_longest_path(current: Position,
     visited.add(current)
 
     if current == goal:
+        visited.remove(current)
         return 0
 
     next_options = [
         (p, d) for (p, d) in next_positions[current]
         if p not in visited
     ]
-    if len(next_options) == 0:
-        raise NoPathToGoalPossible()
-
-    if len(next_options) == 1:
-        next_position, distance = next_options[0]
-        return distance + find_longest_path(
-            next_position, goal, visited, next_positions
-        )
 
     path_lengths = []
     for next_position, distance in next_options:
-        visited_copy = visited.copy()
         try:
             path_length = find_longest_path(
                 next_position,
                 goal,
-                visited_copy,
+                visited,
                 next_positions
             )
         except NoPathToGoalPossible:
             continue
         path_lengths.append(path_length + distance)
+
+    visited.remove(current)  # Restore visited to function call state
 
     if len(path_lengths) == 0:
         raise NoPathToGoalPossible
