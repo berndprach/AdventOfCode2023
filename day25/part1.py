@@ -1,5 +1,6 @@
 
 from time import time
+from typing import Optional
 
 
 def read_input() -> list[str]:
@@ -52,7 +53,10 @@ def find_flow(graph: Graph, start: Node, goal: Node) -> tuple[int, Flow]:
             flow[(t, s)] -= 1
 
 
-def find_path_with_capacity(graph: Graph, flow: Flow, start: Node, goal: Node
+def find_path_with_capacity(graph: Graph,
+                            flow: Flow,
+                            start: Node,
+                            goal: Node
                             ) -> Optional[list[Edge]]:
     previous_node = {start: None}
     queue = [start]
@@ -76,19 +80,19 @@ def find_path_with_capacity(graph: Graph, flow: Flow, start: Node, goal: Node
 
 def solve(lines: list[str]) -> int:
     graph = parse_input(lines)
-    for try_s in graph.keys():
-        for try_t in graph.keys():
-            if try_s == try_t:
+    for s in graph.keys():
+        for t in graph.keys():
+            if s == t:
                 continue
 
-            print(f"{try_s = }, {try_t = }")
-            max_flow, flow_dict = find_flow(graph, try_s, try_t)
-            if max_flow == 3:
-                cut = find_cut(graph, flow_dict, try_s)
-                size1 = len(cut)
-                size2 = len(graph) - size1
-                print(f"{size1 = }, {size2 = }")
-                return size1 * size2
+            max_flow_value, flow = find_flow(graph, s, t)
+            if max_flow_value != 3:
+                continue
+
+            cut = find_cut(graph, flow, s)
+            size1 = len(cut)
+            size2 = len(graph) - size1
+            return size1 * size2
 
 
 def find_cut(graph: Graph, flow: dict[Edge, int], start: str) -> set[str]:
@@ -97,7 +101,9 @@ def find_cut(graph: Graph, flow: dict[Edge, int], start: str) -> set[str]:
     while len(queue) > 0:
         s = queue.pop(0)
         for t in graph[s]:
-            if t not in visited and flow[(s, t)] < 1:
+            if t in visited:
+                continue
+            if flow[(s, t)] < 1:
                 visited.add(t)
                 queue.append(t)
 
